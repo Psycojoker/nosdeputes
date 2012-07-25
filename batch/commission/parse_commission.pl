@@ -111,9 +111,10 @@ sub checkout {
 sub setFonction {
     my $fonction = shift;
     my $intervenant = setIntervenant(shift);
-    $fonction =~ s/\W+$//;
+    $fonction =~ s/[^a-zàâéèêëîïôùûü]+$//i;
     $fonction =~ s/<[^>]+>\s*//g;
     $fonction =~ s/<[^>]*$//;
+    $fonction =~ s/\s+[0-9]\s*$//;
     my $kfonction = lc($fonction);
     $kfonction =~ s/[^a-zéàè]+/ /gi;
     $fonction2inter{$kfonction} = $intervenant;

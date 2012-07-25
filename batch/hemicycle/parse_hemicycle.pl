@@ -157,12 +157,15 @@ sub checkout {
     }
     $out .= '"timestamp": "';
     if ($intervenant) {
-	if ($intervenant =~ s/( et|, )(\s*M[mes\.]*|)\s*([A-Z].*)//) {
-	    $ts = $cpt + 1;
-	    print $out.$ts.'", "intervenant": "'.$3."\"}\n";
+	$ts = $cpt;
+	if ($intervenant =~ s/( et|, )(\s*M[mes\.]*|)\s*([A-Zé].*)$//) {
+	    foreach $i (split(/ et |, /, $3)) {
+	        $ts++;
+	        print $out.$ts.'", "intervenant": "'.$i."\"}\n";
+	    }
 	}
-	if ($inter2fonction{$intervenant} =~ s/( et|, )(\s*M[mes\.]*|)\s*([A-Z].*)//g) {
-            $ts = $cpt + 2;
+	if ($inter2fonction{$intervenant} =~ s/( et|, )(\s*M[mes\.]*|)\s*([A-Zé].*)//g) {
+            $ts++;
 	    print $out.$ts.'", "intervenant": "'.$3."\"}\n";
 	    $inter2fonction{$intervenant} = '';
 	}
@@ -194,14 +197,14 @@ sub setFonction {
 
 sub setIntervenant {
     my $intervenant = shift;
-#    print "$intervenant\n";
+    #print "$intervenant\n";
     $intervenant =~ s/^(M(\.|me))(\S)/$1 $2/;
     $intervenant =~ s/[\|\/]//g;
     $intervenant =~ s/\s*\&\#8211\;\s*$//;
     $intervenant =~ s/\s*[\.\:]\s*$//;
-    $intervenant =~ s/Madame/Mme/;
-    $intervenant =~ s/Monsieur/M./;
-    $intervenant =~ s/\s+et\s+M[\.lmes]+\s+/ et /;
+    $intervenant =~ s/Madame/Mme/g;
+    $intervenant =~ s/Monsieur/M./g;
+    $intervenant =~ s/(\s+et|,)\s+M[\.lmes]+\s+/ et /g;
     $intervenant =~ s/^M[\.mes]*\s//i;
     $intervenant =~ s/\s*\..*$//;
     $intervenant =~ s/L([ea])\s/l$1 /i;
@@ -318,6 +321,7 @@ foreach $line (split /\n/, $string)
 	    $titre2 =~ s/a href[^>]+>//g;
 	    $titre2 =~ s/\///g;
 	    $titre2 =~ s/\s+$//;
+	    $titre2 =~ s/h2>//gi;
 	    $amendements = @pre_amendements = ();
 	    $line = "<p>|$titre2|</p>";
 	    $donetitre1 = 0;
