@@ -3,7 +3,7 @@
   <?php if (!isset($zero)) { ?>
   <h3 class="aligncenter">S'abonner aux résultats<br/>de cette recherche</h3>
   <?php } else { ?>
-  <h3 class="aligncenter">Etre alerté lorsque cette<br/>recherche a un résultat</h3>
+  <h3 class="aligncenter">Être alerté lorsque cette<br/>recherche a un résultat</h3>
   <?php } ?>
 <?php $args = '';
   foreach(array_keys($selected) as $k) {
